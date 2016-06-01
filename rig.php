@@ -5,7 +5,7 @@
 * Description: Runtime Intelligence Gathering for WordPress
 * Author: WRDSB
 * Author URI: https://github.com/wrdsb
-* Version: 0.0.1
+* Version: 0.0.2
 * License: GNU AGPLv3
 * GitHub Plugin URI: wrdsb/wordpress-plugin-rig
 * GitHub Branch: master
@@ -19,7 +19,7 @@ function wrdsb_rig_menu() {
 
 function wrdsb_rig_page() {
 	$total_posts = 0;
-	$total_pages = 0; 
+	$total_pages = 0;
 
 	$args = array(
 		'network_id' => null,
@@ -28,7 +28,7 @@ function wrdsb_rig_page() {
 		'mature'     => null,
 		'spam'       => null,
 		'deleted'    => null,
-		'limit'      => 100,
+		'limit'      => 3000,
 		'offset'     => 0,
 	);
 	$sites = wp_get_sites( $args );
