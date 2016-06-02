@@ -1,2 +1,2 @@
-# WordPress Plugin Runtime Intelligence Gathering
-Runtime Intelligence Gathering for WordPress
+# WordPress Plugin BIG RIG
+Business Intelligence Gathering / Runtime Intelligence Gathering for WordPress

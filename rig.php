@@ -1,23 +1,23 @@
 <?php
 /*
-* Plugin Name: WRDSB RIG
+* Plugin Name: WRDSB BIG RIG
 * Plugin URI: https://github.com/wrdsb/wordpress-plugin-rig
-* Description: Runtime Intelligence Gathering for WordPress
+* Description: Business Intelligence Gathering/Runtime Intelligence Gathering for WordPress
 * Author: WRDSB
 * Author URI: https://github.com/wrdsb
-* Version: 0.0.2
+* Version: 0.0.3
 * License: GNU AGPLv3
-* GitHub Plugin URI: wrdsb/wordpress-plugin-rig
+* GitHub Plugin URI: wrdsb/wordpress-plugin-big-rig
 * GitHub Branch: master
 */
 
-add_action('network_admin_menu', 'wrdsb_rig_menu');
+add_action('network_admin_menu', 'wrdsb_big_rig_menu');
 
-function wrdsb_rig_menu() {
-	add_menu_page("Runtime Intelligence Gathering","RIG",'capability','wrdsb-rig','wrdsb_rig_page');
+function wrdsb_big_rig_menu() {
+	add_menu_page("Business/Runtime Intelligence Gathering","BIG RIG",'capability','wrdsb-big-rig','wrdsb_big_rig_page');
 }
 
-function wrdsb_rig_page() {
+function wrdsb_big_rig_page() {
 	$total_posts = 0;
 	$total_pages = 0;
 
@@ -28,7 +28,7 @@ function wrdsb_rig_page() {
 		'mature'     => null,
 		'spam'       => null,
 		'deleted'    => null,
-		'limit'      => 3000,
+		'limit'      => 4000,
 		'offset'     => 0,
 	);
 	$sites = wp_get_sites( $args );
