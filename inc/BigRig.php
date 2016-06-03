@@ -46,7 +46,8 @@ public function load_gauges() {
 
 	$gaugesFiles = array(
 		$gaugesDir . "BigRigPostsGauge.php",
-		$gaugesDir . "BigRigPagesGauge.php"
+		$gaugesDir . "BigRigPagesGauge.php",
+		$gaugesDir . "BigRigEventsGauge.php"
 	);
 
 	include_once $gaugesDir . "BigRigGauge.php";
@@ -101,6 +102,7 @@ public function big_rig_gauges_page() {
         echo '<h1>Big Rig Gauges</h1>';
 	echo '<p><strong>Total Posts (published):</strong> ' . BigRigPostsGauge::get_network_posts_published() . '</p>';
 	echo '<p><strong>Total Pages (published):</strong> ' . BigRigPagesGauge::get_network_pages_published() . '</p>';
+	echo '<p><strong>Total Events (published):</strong> ' . BigRigEventsGauge::get_network_events_published() . '</p>';
 }
 
 } // end class
