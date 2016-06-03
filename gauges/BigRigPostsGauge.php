@@ -51,7 +51,7 @@ public static function get_network_posts_published() {
 	foreach( $sites as $site ){
 		switch_to_blog( $site['blog_id'] );
 		$count_posts = wp_count_posts();
-		$total_posts += $count_posts->publish;
+		if (isset($count_posts->publish)) { $total_posts += $count_posts->publish; }
 		restore_current_blog();
 	}
 	return $total_posts;

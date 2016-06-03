@@ -50,7 +50,7 @@ public static function get_network_pages_published() {
         foreach( $sites as $site ){
                 switch_to_blog( $site['blog_id'] );
                 $count_pages = wp_count_posts('page');
-                $total_pages += $count_pages->publish;
+                if (isset($count_posts->publish)) { $total_pages += $count_pages->publish; }
                 restore_current_blog();
         }
         return $total_pages;
