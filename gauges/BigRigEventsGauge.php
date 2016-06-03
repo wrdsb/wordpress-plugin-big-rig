@@ -49,17 +49,7 @@ public static function get_network_event_counts() {
                 'private' => 0,
                 'trash' => 0,
         );
-        $args = array(
-                'network_id' => null,
-                'public'     => null,
-                'archived'   => null,
-                'mature'     => null,
-                'spam'       => null,
-                'deleted'    => null,
-                'limit'      => 4000,
-                'offset'     => 0,
-        );
-        $sites = wp_get_sites( $args );
+        $sites = BigRigSitesGauge::get_network_sites();
         foreach( $sites as $site ){
                 switch_to_blog( $site['blog_id'] );
                 $count_events = wp_count_posts('ailec_event');

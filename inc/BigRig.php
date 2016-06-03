@@ -45,6 +45,7 @@ public function load_gauges() {
 	$gaugesDir = BIG_RIG_PATH . "gauges/";
 
 	$gaugesFiles = array(
+		$gaugesDir . "BigRigSitesGauge.php",
 		$gaugesDir . "BigRigPostsGauge.php",
 		$gaugesDir . "BigRigPagesGauge.php",
 		$gaugesDir . "BigRigEventsGauge.php"
