@@ -35,28 +35,6 @@ function getInfo() {
 	return $arr_info;
 }
 
-public static function get_network_posts_published() {
-	$total_posts = 0;
-	$args = array(
-		'network_id' => null,
-		'public'     => null,
-		'archived'   => null,
-		'mature'     => null,
-		'spam'       => null,
-		'deleted'    => null,
-		'limit'      => 4000,
-		'offset'     => 0,
-	);
-	$sites = wp_get_sites( $args );
-	foreach( $sites as $site ){
-		switch_to_blog( $site['blog_id'] );
-		$count_posts = wp_count_posts();
-		if (isset($count_posts->publish)) { $total_posts += $count_posts->publish; }
-		restore_current_blog();
-	}
-	return $total_posts;
-}
-
 public static function get_network_post_count_published() {
 	$post_counts = self::get_network_post_counts();
 	return $post_counts['publish'];
