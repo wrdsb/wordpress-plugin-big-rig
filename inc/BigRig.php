@@ -100,12 +100,15 @@ public function big_rig_gauges_menu() {
 }
 
 public function big_rig_gauges_page() {
+	$network_sites = BigRigSitesGauge::get_network_sites();
 	$network_post_counts = BigRigPostsGauge::get_network_post_counts();
 	$network_page_counts = BigRigPagesGauge::get_network_page_counts();
 	$network_event_counts = BigRigEventsGauge::get_network_event_counts();
         echo '<h1>Big Rig Gauges</h1>';
+	echo '<h2>Sites</h2>';
+	echo '<p><strong>Total Number of Sites:</strong> ' . count($network_sites) . '</p>';
 	echo '<h2>Posts</h2>';
-	echo '<p><strong>Total Published:</strong> ' . $network_post_counts['publish'] . '</p>';
+	echo '<p><strong>Total Published:</strong> ' . $network_post_counts['publish'] . ' (' . $network_post_counts['publish']/count($network_sites) . ' per site)</p>';
 	echo '<p><strong>Total Future:</strong> ' . $network_post_counts['future'] . '</p>';
 	echo '<p><strong>Total Draft:</strong> ' . $network_post_counts['draft'] . '</p>';
 	echo '<p><strong>Total Pending:</strong> ' . $network_post_counts['pending'] . '</p>';
