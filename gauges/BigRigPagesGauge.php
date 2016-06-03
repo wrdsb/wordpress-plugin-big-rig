@@ -34,8 +34,20 @@ function getInfo() {
 	return $arr_info;
 }
 
-public static function get_network_pages_published() {
-        $total_pages = 0;
+public static function get_network_page_count_published() {
+	$page_counts = self::get_network_page_counts();
+	return $page_counts['publish'];
+}
+
+public static function get_network_page_counts() {
+        $page_counts = array(
+                'publish' => 0,
+                'future' => 0,
+                'draft' => 0,
+                'pending' => 0,
+                'private' => 0,
+                'trash' => 0,
+        );
         $args = array(
                 'network_id' => null,
                 'public'     => null,
@@ -50,10 +62,16 @@ public static function get_network_pages_published() {
         foreach( $sites as $site ){
                 switch_to_blog( $site['blog_id'] );
                 $count_pages = wp_count_posts('page');
-                if (isset($count_posts->publish)) { $total_pages += $count_pages->publish; }
+                if (isset($count_pages->publish))    { $page_counts['publish']    += $count_pages->publish; }
+                if (isset($count_pages->future))     { $page_counts['future']     += $count_pages->future; }
+                if (isset($count_pages->draft))      { $page_counts['draft']      += $count_pages->draft; }
+                if (isset($count_pages->pending))    { $page_counts['pending']    += $count_pages->pending; }
+                if (isset($count_pages->private))    { $page_counts['private']    += $count_pages->private; }
+                if (isset($count_pages->trash))      { $page_counts['trash']      += $count_pages->trash; }
                 restore_current_blog();
         }
-        return $total_pages;
+        return $page_counts;
 }
+
 
 } // end class

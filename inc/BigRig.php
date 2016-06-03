@@ -99,10 +99,31 @@ public function big_rig_gauges_menu() {
 }
 
 public function big_rig_gauges_page() {
+	$network_post_counts = BigRigPostsGauge::get_network_post_counts();
+	$network_page_counts = BigRigPagesGauge::get_network_page_counts();
+	$network_event_counts = BigRigEventsGauge::get_network_event_counts();
         echo '<h1>Big Rig Gauges</h1>';
-	echo '<p><strong>Total Posts (published):</strong> ' . BigRigPostsGauge::get_network_posts_published() . '</p>';
-	echo '<p><strong>Total Pages (published):</strong> ' . BigRigPagesGauge::get_network_pages_published() . '</p>';
-	echo '<p><strong>Total Events (published):</strong> ' . BigRigEventsGauge::get_network_events_published() . '</p>';
+	echo '<h2>Posts</h2>';
+	echo '<p><strong>Total Published:</strong> ' . $network_post_counts['publish'] . '</p>';
+	echo '<p><strong>Total Future:</strong> ' . $network_post_counts['future'] . '</p>';
+	echo '<p><strong>Total Draft:</strong> ' . $network_post_counts['draft'] . '</p>';
+	echo '<p><strong>Total Pending:</strong> ' . $network_post_counts['pending'] . '</p>';
+	echo '<p><strong>Total Private:</strong> ' . $network_post_counts['private'] . '</p>';
+	echo '<p><strong>Total Trash:</strong> ' . $network_post_counts['trash'] . '</p>';
+	echo '<h2>Pages</h2>';
+	echo '<p><strong>Total Published:</strong> ' . $network_page_counts['publish'] . '</p>';
+	echo '<p><strong>Total Future:</strong> ' . $network_page_counts['future'] . '</p>';
+	echo '<p><strong>Total Draft:</strong> ' . $network_page_counts['draft'] . '</p>';
+	echo '<p><strong>Total Pending:</strong> ' . $network_page_counts['pending'] . '</p>';
+	echo '<p><strong>Total Private:</strong> ' . $network_page_counts['private'] . '</p>';
+	echo '<p><strong>Total Trash:</strong> ' . $network_page_counts['trash'] . '</p>';
+	echo '<h2>Events</h2>';
+	echo '<p><strong>Total Published:</strong> ' . $network_event_counts['publish'] . '</p>';
+	echo '<p><strong>Total Future:</strong> ' . $network_event_counts['future'] . '</p>';
+	echo '<p><strong>Total Draft:</strong> ' . $network_event_counts['draft'] . '</p>';
+	echo '<p><strong>Total Pending:</strong> ' . $network_event_counts['pending'] . '</p>';
+	echo '<p><strong>Total Private:</strong> ' . $network_event_counts['private'] . '</p>';
+	echo '<p><strong>Total Trash:</strong> ' . $network_event_counts['trash'] . '</p>';
 }
 
 } // end class

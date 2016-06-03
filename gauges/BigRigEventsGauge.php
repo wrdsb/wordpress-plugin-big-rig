@@ -35,26 +35,43 @@ function getInfo() {
 	return $arr_info;
 }
 
-public static function get_network_events_published() {
-	$total_posts = 0;
-	$args = array(
-		'network_id' => null,
-		'public'     => null,
-		'archived'   => null,
-		'mature'     => null,
-		'spam'       => null,
-		'deleted'    => null,
-		'limit'      => 4000,
-		'offset'     => 0,
-	);
-	$sites = wp_get_sites( $args );
-	foreach( $sites as $site ){
-		switch_to_blog( $site['blog_id'] );
-		$count_posts = wp_count_posts('ai1ec_event');
-		if (isset($count_posts->publish)) { $total_posts += $count_posts->publish; }
-		restore_current_blog();
-	}
-	return $total_posts;
+public static function get_network_event_count_published() {
+        $event_counts = self::get_network_event_counts();
+        return $event_counts['publish'];
+}
+
+public static function get_network_event_counts() {
+        $event_counts = array(
+                'publish' => 0,
+                'future' => 0,
+                'draft' => 0,
+                'pending' => 0,
+                'private' => 0,
+                'trash' => 0,
+        );
+        $args = array(
+                'network_id' => null,
+                'public'     => null,
+                'archived'   => null,
+                'mature'     => null,
+                'spam'       => null,
+                'deleted'    => null,
+                'limit'      => 4000,
+                'offset'     => 0,
+        );
+        $sites = wp_get_sites( $args );
+        foreach( $sites as $site ){
+                switch_to_blog( $site['blog_id'] );
+                $count_events = wp_count_posts('ailec_event');
+                if (isset($count_events->publish))    { $event_counts['publish']    += $count_events->publish; }
+                if (isset($count_events->future))     { $event_counts['future']     += $count_events->future; }
+                if (isset($count_events->draft))      { $event_counts['draft']      += $count_events->draft; }
+                if (isset($count_events->pending))    { $event_counts['pending']    += $count_events->pending; }
+                if (isset($count_events->private))    { $event_counts['private']    += $count_events->private; }
+                if (isset($count_events->trash))      { $event_counts['trash']      += $count_events->trash; }
+                restore_current_blog();
+        }
+        return $event_counts;
 }
 
 } // end class
