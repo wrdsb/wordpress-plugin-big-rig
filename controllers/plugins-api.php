@@ -1,12 +1,12 @@
 <?php
 
-class Lamson_WP_Plugins_API_Controller extends WP_REST_Controller {
+class Big_Rig_API_Plugins_Controller extends WP_REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
         $version = '1';
-        $namespace = 'lamson/v' . $version;
+        $namespace = 'big-rig/v' . $version;
         $base = 'plugins';
         register_rest_route( $namespace, '/' . $base, array(
             array(
