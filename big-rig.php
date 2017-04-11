@@ -18,6 +18,8 @@ function wrdsb_big_rig_menu() {
 	add_submenu_page('wrdsb-big-rig', 'Active Widgets', 'Active Widgets', 'manage_options', 'wrdsb-big-rig-widgets', 'wrdsb_big_rig_widgets_page');
 	add_submenu_page('wrdsb-big-rig', 'Users with Special Roles', 'Special Users', 'manage_options', 'wrdsb-big-rig-specials', 'wrdsb_big_rig_specials_page');
 	add_submenu_page('wrdsb-big-rig', 'Provision Mailgun Lists', 'Mailgun Lists', 'manage_options', 'wrdsb-big-rig-mailgun-lists', 'wrdsb_big_rig_mailgun_page');
+	add_submenu_page('wrdsb-big-rig', 'Migrate Subscribers', 'Migrate Subscribers', 'manage_options', 'wrdsb-big-rig-migrate-subscribers', 'wrdsb_big_rig_subscribers_page');
+	add_submenu_page('wrdsb-big-rig', 'Flush Permalinks', 'Flush Permalinks', 'manage_options', 'wrdsb-big-rig-flush-permalinks', 'wrdsb_big_rig_flush_permalinks_page');
 	add_submenu_page('wrdsb-big-rig', 'Audit User Meta', 'Audit User Meta', 'manage_options', 'wrdsb-big-rig-audit-user-meta', 'wrdsb_big_rig_audit_user_meta_page');
 }
 
@@ -126,6 +128,34 @@ function wrdsb_big_rig_specials_page() {
 	echo "</pre>";
 }
 
+function wrdsb_big_rig_flush_permalinks_page() {
+	echo "<h1>Flush Permalinks</h1>";
+	echo "<pre>";
+
+	$args = array(
+		'network_id' => null,
+		'public'     => null,
+		'archived'   => null,
+		'mature'     => null,
+		'spam'       => null,
+		'deleted'    => null,
+		'number'     => 4000,
+		'offset'     => 0,
+	);
+	$sites = get_sites( $args );
+
+	foreach( $sites as $site ) {
+		switch_to_blog( $site->blog_id );
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules( false );
+		$blog_details = get_blog_details(get_current_blog_id());
+		echo $blog_details->path ."\n";
+		restore_current_blog();
+	}
+
+	echo "</pre>";
+}
+
 function wrdsb_big_rig_audit_user_meta_page() {
 	echo "<h1>Audit User Meta</h1>";
 
@@ -192,7 +222,7 @@ function wrdsb_big_rig_audit_user_meta_page() {
 
 function wrdsb_big_rig_mailgun_page() {
 	echo "<h1>Provision Mailgun Lists for Network</h1>";
-	echo "<ul>";
+	echo "<pre>";
 	$list_name = "";
 
 	$args = array(
@@ -209,15 +239,42 @@ function wrdsb_big_rig_mailgun_page() {
 
 	foreach ( $sites as $site ) {
 		$list_name = get_list_name($site);
-		echo "<li>". $list_name ."</li>";
+		echo "curl -s --user 'api:YOUR_API_KEY' https://api.mailgun.net/v3/lists -F address='". $list_name ."'\n";
 	}
-	echo "</ul>";
+	echo "</pre>";
+}
+
+function wrdsb_big_rig_subscribers_page() {
+	echo "<h1>Migrate Subscribers to Mailgun</h1>";
+	echo "<pre>";
+	$list_name = "";
+
+	$args = array(
+		'network_id' => null,
+		'public'     => null,
+		'archived'   => null,
+		'mature'     => null,
+		'spam'       => null,
+		'deleted'    => null,
+		'number'     => 4000,
+		'offset'     => 0,
+	);
+	$sites = get_sites( $args );
+
+	foreach ( $sites as $site ) {
+		$list_name = get_list_name($site);
+		switch_to_blog( $site->blog_id );
+		$subscribers = get_posts( array( 'post_type' => 'subscriber', 'numberposts' => -1 ));
+		foreach ($subscribers as $subscriber ) {
+			echo "curl -s --user 'api:YOUR_API_KEY' https://api.mailgun.net/v3/lists/". $list_name ."/members -F subscribed=True -F address='". $subscriber->post_title ."'\n";
+		}
+	}
+	echo "</pre>";
 }
 
 function get_list_name($site) {
 	$blog_details = get_blog_details($site->blog_id);
 	$my_domain = $blog_details->domain;
-	echo $my_domain;
 	$my_slug = str_replace('/','',$blog_details->path);
 	switch ($my_domain) {
 		case "www.wrdsb.ca":
