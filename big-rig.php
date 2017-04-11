@@ -10,6 +10,12 @@
 * GitHub Plugin URI: wrdsb/wordpress-plugin-big-rig
 * GitHub Branch: master
 */
+add_action('rest_api_init', 'big_rig_api_plugins_controller_init');
+function big_rig_api_plugins_controller_init() {
+    require_once dirname( __FILE__ ) . "/controllers/plugins-api.php";
+    $plugins_api = new Big_Rig_API_Plugins_Controller();
+    $plugins_api->register_routes();
+}
 
 add_action('network_admin_menu', 'wrdsb_big_rig_menu');
 
