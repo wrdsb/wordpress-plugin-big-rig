@@ -165,22 +165,6 @@ function wrdsb_big_rig_flush_permalinks_page() {
 function wrdsb_big_rig_audit_user_meta_page() {
 	echo "<h1>Audit User Meta</h1>";
 
-	$super_admins = array(
-		"manninn",
-		"twardud",
-		"pentick",
-		"cartercs",
-		"willstr",
-		"christd",
-		"greenh",
-		"barrate",
-		"meiklel",
-		"schumajr",
-		"admin",
-		"wrdsbsuperstar",
-		"wpengine"
-	);
-
 	$missing_id_numbers = array();
 	$key = 'wrdsb_id_number';
 	$single = true;
@@ -205,25 +189,17 @@ function wrdsb_big_rig_audit_user_meta_page() {
 		foreach ( $all_users as $user ) {
 			$user_wrdsb_id_number = get_user_meta($user->ID, $key, $single);
 			if ($user_wrdsb_id_number == "") {
+				$missing_id_numbers[] = $user->ID;
 				echo $user->ID .", ";
 				echo $user->user_login .", ";
 				echo $user->user_email ." ";
-				if (!in_array($user->user_login, $super_admins)) {
-					//wp_delete_user($user->ID, 1);
-					echo "deleted.";
-					$missing_id_numbers[] = $user->ID;
-				}
 				echo "\n";
 			}
 		}
+		echo "</pre>";
 	}
 	$missing_id_numbers = array_unique( $missing_id_numbers );
-	echo "<h2>". count($missing_id_numbers) ." users to delete from network.</h2>";
-	foreach ($missing_id_numbers as $userid) {
-		//wpmu_delete_user($userid);
-		echo "deleted ". $userid ."\n";
-	}
-	echo "</pre>";
+	echo "<h2>". count($missing_id_numbers) ." users missing WRDSB ID Number.</h2>";
 }
 
 function wrdsb_big_rig_mailgun_page() {
