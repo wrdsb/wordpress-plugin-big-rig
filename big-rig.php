@@ -5,7 +5,7 @@
 * Description: Business Intelligence Gathering/Runtime Intelligence Gathering for WordPress
 * Author: WRDSB
 * Author URI: https://github.com/wrdsb
-* Version: 0.0.3
+* Version: 0.0.4
 * License: GNU AGPLv3
 * GitHub Plugin URI: wrdsb/wordpress-plugin-big-rig
 * GitHub Branch: master
