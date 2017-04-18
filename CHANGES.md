@@ -1,3 +1,6 @@
+#### 0.0.5
+* Add support for blogs.wrdsb.ca
+
 #### 0.0.3
 * Change plugin name to BIG RIG
 
