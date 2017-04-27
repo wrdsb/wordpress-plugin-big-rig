@@ -5,7 +5,7 @@
 * Description: Business Intelligence Gathering/Runtime Intelligence Gathering for WordPress
 * Author: WRDSB
 * Author URI: https://github.com/wrdsb
-* Version: 0.0.5
+* Version: 0.0.6
 * License: GNU AGPLv3
 * GitHub Plugin URI: wrdsb/wordpress-plugin-big-rig
 * GitHub Branch: master
@@ -153,6 +153,7 @@ function wrdsb_big_rig_flush_permalinks_page() {
 	foreach( $sites as $site ) {
 		switch_to_blog( $site->blog_id );
 		global $wp_rewrite;
+		$wp_rewrite->init();
 		$wp_rewrite->flush_rules( false );
 		$blog_details = get_blog_details(get_current_blog_id());
 		echo $blog_details->path ."\n";

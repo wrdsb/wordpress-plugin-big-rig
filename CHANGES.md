@@ -1,3 +1,6 @@
+#### 0.0.6
+* Fix issue with permalinks flush
+
 #### 0.0.5
 * Add support for blogs.wrdsb.ca
 
