@@ -1,14 +1,14 @@
-=== Plugin Name ===
+=== BIG RIG ===
 Contributors: (this should be a list of wordpress.org userid's)
 Donate link: https://www.wrdsb.ca
 Tags: comments, spam
 Requires at least: 3.0.1
 Tested up to: 3.4
 Stable tag: 4.3
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Business Intelligence Gathering / Runtime Intelligence Gathering for WordPress. Currently provides a single page at the network admin level listing the total number of pages and posts published across the entire network. More to come.
 
 == Description ==
 
