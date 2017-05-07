@@ -1,306 +1,75 @@
 <?php
-/*
-* Plugin Name: WRDSB BIG RIG
-* Plugin URI: https://github.com/wrdsb/wordpress-plugin-rig
-* Description: Business Intelligence Gathering/Runtime Intelligence Gathering for WordPress
-* Author: WRDSB
-* Author URI: https://github.com/wrdsb
-* Version: 0.0.6
-* License: GNU AGPLv3
-* GitHub Plugin URI: wrdsb/wordpress-plugin-big-rig
-* GitHub Branch: master
-*/
-add_action('rest_api_init', 'big_rig_api_plugins_controller_init');
-function big_rig_api_plugins_controller_init() {
-    require_once dirname( __FILE__ ) . "/controllers/plugins-api.php";
-    $plugins_api = new Big_Rig_API_Plugins_Controller();
-    $plugins_api->register_routes();
+
+/**
+ * The plugin bootstrap file
+ *
+ * This file is read by WordPress to generate the plugin information in the plugin
+ * admin area. This file also includes all of the dependencies used by the plugin,
+ * registers the activation and deactivation functions, and defines a function
+ * that starts the plugin.
+ *
+ * @link              https://www.wrdsb.ca
+ * @since             1.0.0
+ * @package           Big_Rig
+ *
+ * @wordpress-plugin
+ * Plugin Name:       BIG RIG
+ * Plugin URI:        https://github.com/wrdsb/wordpress-plugin-big-rig
+ * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Version:           1.0.0
+ * Author:            WRDSB
+ * Author URI:        https://www.wrdsb.ca
+ * License:           GPL-2.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:       big-rig
+ * Domain Path:       /languages
+ */
+
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
 }
 
-add_action('network_admin_menu', 'wrdsb_big_rig_menu');
-
-function wrdsb_big_rig_menu() {
-	add_menu_page("Business/Runtime Intelligence Gathering", "BIG RIG", 'manage_options', 'wrdsb-big-rig', 'wrdsb_big_rig_page');
-	add_submenu_page('wrdsb-big-rig', 'Active Widgets', 'Active Widgets', 'manage_options', 'wrdsb-big-rig-widgets', 'wrdsb_big_rig_widgets_page');
-	add_submenu_page('wrdsb-big-rig', 'Users with Special Roles', 'Special Users', 'manage_options', 'wrdsb-big-rig-specials', 'wrdsb_big_rig_specials_page');
-	add_submenu_page('wrdsb-big-rig', 'Provision Mailgun Lists', 'Mailgun Lists', 'manage_options', 'wrdsb-big-rig-mailgun-lists', 'wrdsb_big_rig_mailgun_page');
-	add_submenu_page('wrdsb-big-rig', 'Migrate Subscribers', 'Migrate Subscribers', 'manage_options', 'wrdsb-big-rig-migrate-subscribers', 'wrdsb_big_rig_subscribers_page');
-	add_submenu_page('wrdsb-big-rig', 'Flush Permalinks', 'Flush Permalinks', 'manage_options', 'wrdsb-big-rig-flush-permalinks', 'wrdsb_big_rig_flush_permalinks_page');
-	add_submenu_page('wrdsb-big-rig', 'Audit User Meta', 'Audit User Meta', 'manage_options', 'wrdsb-big-rig-audit-user-meta', 'wrdsb_big_rig_audit_user_meta_page');
+/**
+ * The code that runs during plugin activation.
+ * This action is documented in includes/class-big-rig-activator.php
+ */
+function activate_big_rig() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-big-rig-activator.php';
+	Big_Rig_Activator::activate();
 }
 
-function wrdsb_big_rig_page() {
-	$total_posts = 0;
-	$total_pages = 0;
-
-	$args = array(
-		'network_id' => null,
-		'public'     => null,
-		'archived'   => null,
-		'mature'     => null,
-		'spam'       => null,
-		'deleted'    => null,
-		'number'     => 4000,
-		'offset'     => 0,
-	);
-	$sites = get_sites( $args );
-
-	foreach( $sites as $site ) {
-		switch_to_blog( $site->blog_id );
-		$count_posts = wp_count_posts();
-		$total_posts += $count_posts->publish;
-		$count_pages = wp_count_posts('page');
-		$total_pages += $count_pages->publish;
-		restore_current_blog();
-	}
-
-	echo "<p><strong>Total Posts (published):</strong> " . $total_posts . "</p>";
-	echo "<p><strong>Total Pages (published):</strong> " . $total_pages . "</p>";
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in includes/class-big-rig-deactivator.php
+ */
+function deactivate_big_rig() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-big-rig-deactivator.php';
+	Big_Rig_Deactivator::deactivate();
 }
 
-function wrdsb_big_rig_widgets_page() {
-	echo "<h1>Active Widgets</h1>";
-	$dee_vigets  = array();
+register_activation_hook( __FILE__, 'activate_big_rig' );
+register_deactivation_hook( __FILE__, 'deactivate_big_rig' );
 
-	$args = array(
-		'network_id' => null,
-		'public'     => null,
-		'archived'   => null,
-		'mature'     => null,
-		'spam'       => null,
-		'deleted'    => null,
-		'number'     => 4000,
-		'offset'     => 0,
-	);
-	$sites = get_sites( $args );
+/**
+ * The core plugin class that is used to define internationalization,
+ * admin-specific hooks, and public-facing site hooks.
+ */
+require plugin_dir_path( __FILE__ ) . 'includes/class-big-rig.php';
 
-	foreach( $sites as $site ) {
-		switch_to_blog( $site->blog_id );
-		$blog_details = get_blog_details(get_current_blog_id());
-		$my_slug = str_replace('/','',$blog_details->path);
-		$dee_vigets[$my_slug] = get_option('sidebars_widgets');
-		restore_current_blog();
-	}
+/**
+ * Begins execution of the plugin.
+ *
+ * Since everything within the plugin is registered via hooks,
+ * then kicking off the plugin from this point in the file does
+ * not affect the page life cycle.
+ *
+ * @since    1.0.0
+ */
+function run_big_rig() {
 
-	echo "<pre>";
-	print_r($dee_vigets);
-	echo "</pre>";
+	$plugin = new Big_Rig();
+	$plugin->run();
+
 }
-
-function wrdsb_big_rig_specials_page() {
-	echo "<h1>All Users with Special Roles</h1>";
-	$special_users = array();
-
-	$args = array(
-		'network_id' => null,
-		'public'     => null,
-		'archived'   => null,
-		'mature'     => null,
-		'spam'       => null,
-		'deleted'    => null,
-		'number'     => 4000,
-		'offset'     => 0,
-	);
-	$sites = get_sites( $args );
-
-	foreach ( $sites as $site ) {
-		switch_to_blog( $site->blog_id );
-
-		$special_users[$site->path]['administrator'] = array();
-		$special_users[$site->path]['editor']        = array();
-		$special_users[$site->path]['author']        = array();
-		$special_users[$site->path]['contributor']   = array();
-
-		$blogusers = get_users( array( 'role' => 'administrator' ) );
-		foreach ( $blogusers as $user ) {
-			$special_users[$site->path]['administrator'][$user->ID] = esc_html( $user->user_email );
-		}
-		$blogusers = get_users( array( 'role' => 'editor' ) );
-		foreach ( $blogusers as $user ) {
-			$special_users[$site->path]['editor'][$user->ID] = esc_html( $user->user_email );
-		}
-		$blogusers = get_users( array( 'role' => 'author' ) );
-		foreach ( $blogusers as $user ) {
-			$special_users[$site->path]['author'][$user->ID] = esc_html( $user->user_email );
-		}
-		$blogusers = get_users( array( 'role' => 'contributor' ) );
-		foreach ( $blogusers as $user ) {
-			$special_users[$site->path]['contributor'][$user->ID] = esc_html( $user->user_email );
-		}
-		restore_current_blog();
-	}
-	echo "<pre>";
-	print_r($special_users);
-	echo "</pre>";
-}
-
-function wrdsb_big_rig_flush_permalinks_page() {
-	echo "<h1>Flush Permalinks</h1>";
-	echo "<pre>";
-
-	$args = array(
-		'network_id' => null,
-		'public'     => null,
-		'archived'   => null,
-		'mature'     => null,
-		'spam'       => null,
-		'deleted'    => null,
-		'number'     => 4000,
-		'offset'     => 0,
-	);
-	$sites = get_sites( $args );
-
-	foreach( $sites as $site ) {
-		switch_to_blog( $site->blog_id );
-		global $wp_rewrite;
-		$wp_rewrite->init();
-		$wp_rewrite->flush_rules( false );
-		$blog_details = get_blog_details(get_current_blog_id());
-		echo $blog_details->path ."\n";
-		restore_current_blog();
-	}
-
-	echo "</pre>";
-}
-
-function wrdsb_big_rig_audit_user_meta_page() {
-	echo "<h1>Audit User Meta</h1>";
-
-	$missing_id_numbers = array();
-	$key = 'wrdsb_id_number';
-	$single = true;
-
-	$args = array(
-		'network_id' => null,
-		'public'     => null,
-		'archived'   => null,
-		'mature'     => null,
-		'spam'       => null,
-		'deleted'    => null,
-		'number'     => 4000,
-		'offset'     => 0,
-	);
-	$sites = get_sites( $args );
-
-	foreach ( $sites as $site ) {
-		switch_to_blog( $site->blog_id );
-		echo "<h2>Switched to Blog #". $site->blog_id ."</h2>";
-		echo "<pre>";
-		$all_users = get_users();
-		foreach ( $all_users as $user ) {
-			$user_wrdsb_id_number = get_user_meta($user->ID, $key, $single);
-			if ($user_wrdsb_id_number == "") {
-				$missing_id_numbers[] = $user->ID;
-				echo $user->ID .", ";
-				echo $user->user_login .", ";
-				echo $user->user_email ." ";
-				echo "\n";
-			}
-		}
-		echo "</pre>";
-	}
-	$missing_id_numbers = array_unique( $missing_id_numbers );
-	echo "<h2>". count($missing_id_numbers) ." users missing WRDSB ID Number.</h2>";
-}
-
-function wrdsb_big_rig_mailgun_page() {
-	echo "<h1>Provision Mailgun Lists for Network</h1>";
-	echo "<pre>";
-	$list_name = "";
-
-	$args = array(
-		'network_id' => null,
-		'public'     => null,
-		'archived'   => null,
-		'mature'     => null,
-		'spam'       => null,
-		'deleted'    => null,
-		'number'     => 4000,
-		'offset'     => 0,
-	);
-	$sites = get_sites( $args );
-
-	foreach ( $sites as $site ) {
-		$list_name = get_list_name($site);
-		echo "curl -s --user 'api:YOUR_API_KEY' https://api.mailgun.net/v3/lists -F address='". $list_name ."'\n";
-	}
-	echo "</pre>";
-}
-
-function wrdsb_big_rig_subscribers_page() {
-	echo "<h1>Migrate Subscribers to Mailgun</h1>";
-	echo "<pre>";
-	$list_name = "";
-
-	$args = array(
-		'network_id' => null,
-		'public'     => null,
-		'archived'   => null,
-		'mature'     => null,
-		'spam'       => null,
-		'deleted'    => null,
-		'number'     => 4000,
-		'offset'     => 0,
-	);
-	$sites = get_sites( $args );
-
-	foreach ( $sites as $site ) {
-		$list_name = get_list_name($site);
-		switch_to_blog( $site->blog_id );
-		$subscribers = get_posts( array( 'post_type' => 'subscriber', 'numberposts' => -1 ));
-		foreach ($subscribers as $subscriber ) {
-			echo "curl -s --user 'api:YOUR_API_KEY' https://api.mailgun.net/v3/lists/". $list_name ."/members -F subscribed=True -F address='". $subscriber->post_title ."'\n";
-		}
-	}
-	echo "</pre>";
-}
-
-function get_list_name($site) {
-	$blog_details = get_blog_details($site->blog_id);
-	$my_domain = $blog_details->domain;
-	$my_slug = str_replace('/','',$blog_details->path);
-	switch ($my_domain) {
-		case "www.wrdsb.ca":
-			if (empty($my_slug)) {
-				return "www@hedwig.wrdsb.ca";
-			} else {
-				return "www-".$my_slug."@hedwig.wrdsb.ca";
-			}
-		case "staff.wrdsb.ca":
-			if (empty($my_slug)) {
-				return "staff@hedwig.wrdsb.ca";
-			} else {
-				return "staff-".$my_slug."@hedwig.wrdsb.ca";
-			}
-		case "schools.wrdsb.ca":
-			if (empty($my_slug)) {
-				return "schools@hedwig.wrdsb.ca";
-			} else {
-				return $my_slug."@hedwig.wrdsb.ca";
-			}
-		case "teachers.wrdsb.ca":
-			if (empty($my_slug)) {
-				return "teachers@hedwig.wrdsb.ca";
-			} else {
-				return "teachers-".$my_slug."@hedwig.wrdsb.ca";
-			}
-		case "blogs.wrdsb.ca":
-			if (empty($my_slug)) {
-				return "blogs@hedwig.wrdsb.ca";
-			} else {
-				return "blogs-".$my_slug."@hedwig.wrdsb.ca";
-			}
-		case "wcssaa.ca":
-			return "wcssaa@hedwig.wrdsb.ca";
-		case "wplabs.wrdsb.ca":
-			if (empty($my_slug)) {
-				return "wplabs@hedwig.wrdsb.ca";
-			} else {
-				return "wplabs-".$my_slug."@hedwig.wrdsb.ca";
-			}
-		case "www.stswr.ca":
-			return "www@bigbus.stswr.ca";
-		default:
-			return "no-list@hedwig.wrdsb.ca";
-	}
-}
+run_big_rig();
